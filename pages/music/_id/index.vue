@@ -31,7 +31,6 @@
           :id="'music' + music.id"
           preload="auto"
           type="audio/mpeg"
-          :ref="'audio' + music.id"
         />
 
         <button id="play" @click="play('music' + music.id)">再生</button>
@@ -65,7 +64,6 @@ export default {
     await this.fetchMusic({ id: this.$route.params.id });
     
     _.forEach(this.getMusic.versions, (music) => {
-      console.log(this.$refs["audio" + music.id]);
 
       this.$set(this.percent, music.id, 0);
       this.$set(this.currentTime, music.id, 0);

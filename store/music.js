@@ -1,26 +1,5 @@
 import _ from 'lodash'
 
-// music: {
-//     id: "001",
-//     version: "1.0.0",
-//     title: "Achromatic Sun",
-//     comment: "PV化する予定です、よろしくお願いします。テストテストテストテストテストテストテストテストテストテストテストテスト",
-//     versions: [{
-//       id: "A001",
-//       version: "1.0.0",
-//       created: "2020-12-24 15:00",
-//       src: "/music/001.mp3",
-//       comments: []
-//     },
-//     {
-//       id: "A002",
-//       version: "2.0.0",
-//       created: "2021-01-07 15:00",
-//       src: "/music/002.mp3",
-//       comments: []
-//     }]
-//   },
-
 export const state = () => ({
   discList: [],
   music: {},
@@ -63,8 +42,10 @@ export const actions = {
   async fetchMusic({ commit, state, dispatch }, {id}) {
     commit('setIsLoading', true)
     const {data} = await this.$axios.get('/musics/' + id)
+  
+    console.log(data)
 
-    const versions = await dispatch('searchVersions', data.disc_id)
+    const versions = await dispatch('searchVersions', data.id )
     data.versions = versions
  
     commit('setMusic', data)    
@@ -73,6 +54,7 @@ export const actions = {
 
   async searchVersions({ commit}, id) {
     const {data} = await this.$axios.get('/versions', { params: {music_id: id} })
+
     return data
   },
   async searchMusics({ commit }, {id}) {
