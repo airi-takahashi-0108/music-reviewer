@@ -1,61 +1,29 @@
-import Vue from 'vue'
 import _ from 'lodash'
 
-
-
-// const  discList = [{
+// music: {
 //     id: "001",
-//     title: "3rd Single",
-//     description: "6月発売",
-//     music: [{
-//       id: "001",
-//       title: "Achromatic Sun",
-//       comment: "PV化する予定です、よろしくお願いします。テストテストテストテストテストテストテストテストテストテストテストテスト"
+//     version: "1.0.0",
+//     title: "Achromatic Sun",
+//     comment: "PV化する予定です、よろしくお願いします。テストテストテストテストテストテストテストテストテストテストテストテスト",
+//     versions: [{
+//       id: "A001",
+//       version: "1.0.0",
+//       created: "2020-12-24 15:00",
+//       src: "/music/001.mp3",
+//       comments: []
 //     },
 //     {
-//       id: "002",
-//       title: "tomorrow",
-//       comment: ""
+//       id: "A002",
+//       version: "2.0.0",
+//       created: "2021-01-07 15:00",
+//       src: "/music/002.mp3",
+//       comments: []
 //     }]
 //   },
-//   {
-//     id: "002",
-//     title: "4th Single",
-//     description: "来年発売",
-//     music: [{
-//       id: "003",
-//       title: "Rise!",
-//       comment: ""
-//     },
-//     {
-//       id: "004",
-//       title: "We are No1",
-//       comment: ""
-//     }]
-//   }],
 
 export const state = () => ({
   discList: [],
-  music: {
-    id: "001",
-    version: "1.0.0",
-    title: "Achromatic Sun",
-    comment: "PV化する予定です、よろしくお願いします。テストテストテストテストテストテストテストテストテストテストテストテスト",
-    versions: [{
-      id: "A001",
-      version: "1.0.0",
-      created: "2020-12-24 15:00",
-      src: "/music/001.mp3",
-      comments: []
-    },
-    {
-      id: "A002",
-      version: "2.0.0",
-      created: "2021-01-07 15:00",
-      src: "/music/002.mp3",
-      comments: []
-    }]
-  },
+  music: {},
   isLoading: false
 })
 
@@ -92,7 +60,21 @@ export const actions = {
     commit('setIsLoading', false)
   },
 
+  async fetchMusic({ commit, state, dispatch }, {id}) {
+    commit('setIsLoading', true)
+    const {data} = await this.$axios.get('/musics/' + id)
 
+    const versions = await dispatch('searchVersions', data.disc_id)
+    data.versions = versions
+ 
+    commit('setMusic', data)    
+    commit('setIsLoading', false)
+  },
+
+  async searchVersions({ commit}, id) {
+    const {data} = await this.$axios.get('/versions', { params: {music_id: id} })
+    return data
+  },
   async searchMusics({ commit }, {id}) {
     const {data} = await this.$axios.get('/musics', { params: {disc_id: id} })
     return data
