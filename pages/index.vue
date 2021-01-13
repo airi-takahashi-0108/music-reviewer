@@ -1,7 +1,6 @@
 <template>
   <div class="container">
 
-    <pre>{{disc}}</pre>
   
   </div>
 </template>
@@ -17,11 +16,13 @@ export default {
     }
   },
   mounted() {
-     axios.get('/musics')
+     this.$axios.get('/musics')
     .then(response =>  { 
       console.log(response)
-      this.disc = response
+      this.disc = response.data
       })
+
+      console.log(process.env.BASE_URL)
 
 
   },
@@ -36,8 +37,6 @@ export default {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
 .logo {

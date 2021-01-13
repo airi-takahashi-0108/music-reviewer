@@ -75,7 +75,7 @@ export const mutations = {
 export const actions = {
   async fetchDiscList({commit}) {
     commit('setIsLoading', true)
-    const data = await $axios.get('/Discs')
+    const data = await $axios.get('/discs')
     commit('setIsLoading', false)
     return data
   }
