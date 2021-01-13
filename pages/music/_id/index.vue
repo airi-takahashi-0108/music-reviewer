@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <h2 class="page-title">楽曲詳細</h2>
-
     <h3>{{ getMusic.title }}</h3>
     <p>{{ getMusic.comment }}</p>
 
@@ -14,10 +13,7 @@
           <a-form-model-item ref="version" label="バージョン" prop="version">
             <a-input />
           </a-form-model-item>
-          <a-upload
-            name="music"
-            :multiple="true"
-          >
+          <a-upload name="music" :multiple="true">
             <a-button> <a-icon type="upload" /> Click to Upload </a-button>
           </a-upload>
         </a-form-model>
@@ -31,10 +27,11 @@
         <p>{{ music.created }}作成</p>
 
         <audio
-          :src="music.src"
+          :src="setMusicSrc(music.src)"
           :id="'music' + music.id"
           preload="auto"
           type="audio/mpeg"
+          :ref="'audio' + music.id"
         />
 
         <button id="play" @click="play('music' + music.id)">再生</button>
@@ -51,7 +48,7 @@
         <span :id="'status' + music.id">
           {{ currentTime[music.id] }}/{{ duration[music.id] }}
         </span>
-        <a id="download" :href="music.src" download>DOWNLOAD</a>
+        <a id="download" :href="setMusicSrc(music.src)" download>DOWNLOAD</a>
       </div>
     </div>
 
@@ -59,18 +56,21 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import _ from 'lodash'
 
 export default {
   name: "music-id",
-  created() {
-  },
-  mounted() {
-
+  async mounted() {
+    await this.fetchMusic({ id: this.$route.params.id });
+    
     _.forEach(this.getMusic.versions, (music) => {
-      const audio = document.getElementById("music" + music.id);
+      console.log(this.$refs["audio" + music.id]);
+
       this.$set(this.percent, music.id, 0);
       this.$set(this.currentTime, music.id, 0);
+
+      const audio = document.getElementById("music" + music.id);
 
       audio.addEventListener("canplay", () => {
         this.$set(this.duration, music.id, Math.floor(audio.duration));
@@ -86,6 +86,7 @@ export default {
     });
   },
   methods: {
+    ...mapActions("music", ["fetchMusic"]),
     changePosition(id, e) {
       const audio = document.getElementById("music" + id);
 
@@ -108,6 +109,10 @@ export default {
     stop: function (id) {
       document.getElementById(id).pause();
     },
+    setMusicSrc(srcUrl) {
+      // TODO: バイナリデータを格納するデータベースのURLを返す,s3の予定
+      return "http://localhost:8080" + srcUrl;
+    },
   },
   data() {
     return {
@@ -118,6 +123,14 @@ export default {
   },
   computed: {
     ...mapGetters("music", ["getMusic"]),
+  },
+  watch: {
+    $refs: {
+      handler: function () {
+        console.log("hit");
+      },
+      deep: true,
+    },
   },
 };
 </script>
