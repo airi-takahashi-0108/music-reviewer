@@ -1,4 +1,6 @@
+import Vue from 'vue'
 import _ from 'lodash'
+
 
 
 // const  discList = [{
@@ -76,11 +78,20 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchDiscList({ commit, state }) {
+  async fetchDiscList({ commit, state, dispatch }) {
     commit('setIsLoading', true)
+
     const {data} = await this.$axios.get('/discs')
-    commit('setDiscList', data)
-    console.log(state.discList)
+    _.forEach(data, (disc)=> {
+      const musics = new Promise(()=> dispatch('searchMusics', { id: disc.id }))
+      disc.musics = musics
+    })
+
+    commit('setDiscList', [...data])    
     commit('setIsLoading', false)
+  },
+  async searchMusics({ commit }, {id}) {
+    const {data} = await this.$axios.get('/musics', { params: {disc_id: id} })
+    return data
   }
 }

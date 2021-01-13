@@ -18,6 +18,7 @@
 
     <div class="discContent" v-for="disc in getDiscList" :key="disc.id">
       <h3 class="discContent__title">{{ disc.title }}</h3>
+      <pre>{{disc}}</pre>
 
       <div>
         <a-collapse>
@@ -38,7 +39,7 @@
       <a-list
         :loading="getIsLoading"
         item-layout="horizontal"
-        :data-source="disc.music"
+        :data-source="disc.musics"
       >
         <a-list-item slot="renderItem" slot-scope="item, index">
           <a-list-item-meta :description="item.comment">
