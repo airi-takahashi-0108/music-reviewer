@@ -4,15 +4,17 @@
 
     <a-collapse>
       <a-collapse-panel key="1" header="ディスクを登録">
-        <a-form-model :model="form">
-          <a-form-model-item ref="name" label="ディスク名" prop="name">
+        <a-form :form="discForm" @submit="discHandleSubmit">
+          <a-form-item ref="name" label="ディスク名" prop="name">
             <a-input />
-          </a-form-model-item>
-          <a-form-model-item ref="comment" label="詳細" prop="comment">
+          </a-form-item>
+          <a-form-item ref="comment" label="詳細" prop="comment">
             <a-input type="textarea" />
-          </a-form-model-item>
-        </a-form-model>
-        <a-button type="primary"> 登録 </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit"> 登録 </a-button>
+          </a-form-item>
+        </a-form>
       </a-collapse-panel>
     </a-collapse>
 
@@ -22,7 +24,7 @@
       <div>
         <a-collapse>
           <a-collapse-panel key="1" header="楽曲を登録">
-            <a-form-model :model="form">
+            <a-form-model>
               <a-form-model-item ref="name" label="楽曲名" prop="name">
                 <a-input />
               </a-form-model-item>
@@ -30,7 +32,7 @@
                 <a-input type="textarea" />
               </a-form-model-item>
             </a-form-model>
-            <a-button type="primary"> 登録 </a-button>
+            <a-button type="primary" html-type="submit"> 登録 </a-button>
           </a-collapse-panel>
         </a-collapse>
       </div>
@@ -50,7 +52,7 @@
           </a-list-item-meta>
         </a-list-item>
       </a-list>
-      
+
       <a-button size="small">ディスクを編集</a-button>
       <a-button size="small">ディスクを削除</a-button>
     </div>
@@ -58,24 +60,31 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       loading: false,
-      form: {},
+      discForm: this.$form.createForm(this),
     };
   },
   async fetch() {
-    await this.fetchDiscList()
+    await this.fetchDiscList();
   },
   computed: {
     ...mapGetters("music", ["getDiscList", "getIsLoading"]),
   },
   methods: {
     ...mapActions("music", ["fetchDiscList"]),
-  }
+    discHandleSubmit() {
+      
+          this.discForm.validateFields((err, values) => console.log(values))
+
+
+
+    },
+  },
 };
 </script>
 

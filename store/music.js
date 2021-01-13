@@ -35,7 +35,6 @@ export const actions = {
     }
  
     commit('setDiscList', data)    
-    console.log(state.discList)
     commit('setIsLoading', false)
   },
 
@@ -43,8 +42,6 @@ export const actions = {
     commit('setIsLoading', true)
     const {data} = await this.$axios.get('/musics/' + id)
   
-    console.log(data)
-
     const versions = await dispatch('searchVersions', data.id )
     data.versions = versions
  
@@ -54,9 +51,9 @@ export const actions = {
 
   async searchVersions({ commit}, id) {
     const {data} = await this.$axios.get('/versions', { params: {music_id: id} })
-
     return data
   },
+
   async searchMusics({ commit }, {id}) {
     const {data} = await this.$axios.get('/musics', { params: {disc_id: id} })
     return data

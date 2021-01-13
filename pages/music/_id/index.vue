@@ -24,7 +24,7 @@
     <div v-for="music in getMusic.versions" :key="music.id">
       <div class="musicContents">
         <h4>バージョン:{{ music.version }}</h4>
-        <p>{{ music.created }}作成</p>
+        <p>{{ music.created_at }}作成</p>
 
         <audio
           :src="setMusicSrc(music.src)"
@@ -51,7 +51,9 @@
       </div>
     </div>
 
-    <a-button>戻る</a-button>
+    <a-button size="small">
+      <nuxt-link to="/music">戻る</nuxt-link>
+    </a-button>
   </div>
 </template>
 <script>
