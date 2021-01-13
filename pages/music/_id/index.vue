@@ -25,7 +25,7 @@
       </a-collapse-panel>
     </a-collapse>
 
-    <div v-for="music in getMusic.versionList" :key="music.id">
+    <div v-for="music in getMusic.versions" :key="music.id">
       <div class="musicContents">
         <h4>バージョン:{{ music.version }}</h4>
         <p>{{ music.created }}作成</p>
@@ -67,7 +67,7 @@ export default {
   },
   mounted() {
 
-    _.forEach(this.getMusic.versionList, (music) => {
+    _.forEach(this.getMusic.versions, (music) => {
       const audio = document.getElementById("music" + music.id);
       this.$set(this.percent, music.id, 0);
       this.$set(this.currentTime, music.id, 0);

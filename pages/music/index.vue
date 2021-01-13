@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters, mapActions} from "vuex";
 
 export default {
   data() {
@@ -67,13 +67,14 @@ export default {
       form: {},
     };
   },
-  created() {
+  async fetch() {
+    await this.fetchDiscList()
   },
   computed: {
     ...mapGetters("music", ["getDiscList", "getIsLoading"]),
   },
   methods: {
-
+    ...mapActions("music", ["fetchDiscList"]),
   }
 };
 </script>

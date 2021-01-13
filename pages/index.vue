@@ -1,33 +1,27 @@
 <template>
   <div class="container">
-
-  
+  {{getDiscList}}
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
+import {mapGetters, mapActions} from "vuex";
 
 export default {
   data() {
     return {
-      disc: []
     }
   },
-  mounted() {
-     this.$axios.get('/musics')
-    .then(response =>  { 
-      console.log(response)
-      this.disc = response.data
-      })
-
-      console.log(process.env.BASE_URL)
-
-
+  async fetch() {
+    await this.fetchDiscList()
   },
   computed: {
+    ...mapGetters("music", ["getDiscList", "getIsLoading"]),
+  },
+  methods: {
+    ...mapActions("music", ["fetchDiscList"]),
   }
+  
 }
 </script>
 
