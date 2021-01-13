@@ -18,7 +18,6 @@
 
     <div class="discContent" v-for="disc in getDiscList" :key="disc.id">
       <h3 class="discContent__title">{{ disc.title }}</h3>
-      <pre>{{disc}}</pre>
 
       <div>
         <a-collapse>

@@ -13,6 +13,7 @@
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/dotenv": "^1.4.1",
     "ant-design-vue": "^1.6.5",
+    "array-foreach-async": "^1.0.1",
     "audio.js": "^1.1.3",
     "core-js": "^3.6.5",
     "dotenv": "^8.2.0",
