@@ -5,11 +5,11 @@
     <a-collapse>
       <a-collapse-panel key="1" header="ディスクを登録">
         <a-form :form="discForm" @submit="discHandleSubmit">
-          <a-form-item ref="name" label="ディスク名" prop="name">
-            <a-input />
+          <a-form-item label="ディスクタイトル">
+            <a-input v-decorator="['title', { rules: [{ required: true, message: 'ディスクタイトルを入力してください' }] }]"/>
           </a-form-item>
-          <a-form-item ref="comment" label="詳細" prop="comment">
-            <a-input type="textarea" />
+          <a-form-item label="詳細">
+            <a-input type="textarea" v-decorator="['description', { rules: [{ required: true, message: 'ディスクの詳細を入力してください' }] }]"/>
           </a-form-item>
           <a-form-item>
             <a-button type="primary" html-type="submit"> 登録 </a-button>
@@ -24,15 +24,17 @@
       <div>
         <a-collapse>
           <a-collapse-panel key="1" header="楽曲を登録">
-            <a-form-model>
-              <a-form-model-item ref="name" label="楽曲名" prop="name">
-                <a-input />
-              </a-form-model-item>
-              <a-form-model-item ref="comment" label="コメント" prop="comment">
-                <a-input type="textarea" />
-              </a-form-model-item>
-            </a-form-model>
-            <a-button type="primary" html-type="submit"> 登録 </a-button>
+            <a-form :form="musicForm" @submit="musicHandleSubmit(disc.id)">
+              <a-form-item label="楽曲タイトル">
+                <a-input v-decorator="['title', { rules: [{ required: true, message: '楽曲タイトルを入力してください' }] }]"/>
+              </a-form-item>
+              <a-form-item label="コメント">
+                <a-input type="textarea" v-decorator="['comment', { rules: [{ required: true, message: 'コメントを入力してください' }] }]"/>
+              </a-form-item>
+                <a-form-item>
+                  <a-button type="primary" html-type="submit"> 登録 </a-button>
+                </a-form-item>
+            </a-form>
           </a-collapse-panel>
         </a-collapse>
       </div>
@@ -66,7 +68,8 @@ export default {
   data() {
     return {
       loading: false,
-      discForm: this.$form.createForm(this),
+      discForm: this.$form.createForm(this, {name: "disc_form"}),
+      musicForm: this.$form.createForm(this, {name: "music_form"}),
     };
   },
   async fetch() {
@@ -78,12 +81,14 @@ export default {
   methods: {
     ...mapActions("music", ["fetchDiscList"]),
     discHandleSubmit() {
-      
-          this.discForm.validateFields((err, values) => console.log(values))
-
-
-
+      event.preventDefault();
+      this.discForm.validateFields((err, values) => console.log(values))
     },
+    musicHandleSubmit(id, e) {
+      event.preventDefault();
+      console.log("discID: " + id)
+      this.musicForm.validateFields((err, values) => console.log(values))
+    }
   },
 };
 </script>

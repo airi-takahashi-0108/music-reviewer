@@ -7,17 +7,25 @@
     <a-button size="small">楽曲を編集</a-button>
     <a-button size="small">楽曲を削除</a-button>
 
-    　<a-collapse>
+    <a-collapse>
       <a-collapse-panel key="1" header="楽曲のバージョンを登録">
-        <a-form-model>
-          <a-form-model-item ref="version" label="バージョン" prop="version">
-            <a-input />
-          </a-form-model-item>
-          <a-upload name="music" :multiple="true">
-            <a-button> <a-icon type="upload" /> Click to Upload </a-button>
-          </a-upload>
-        </a-form-model>
-        <a-button type="primary"> 登録 </a-button>
+        <a-form　:form="versionForm" @submit="versionHandleSubmit">
+          <a-form-item label="バージョン">
+            <a-input v-decorator="['version', { rules: [{ required: true, message: 'バージョン情報を入力してください' }] }]"/>
+          </a-form-item>
+          <a-form-item label="楽曲データ">
+            <a-upload v-decorator="['upload', { rules: [{ required: true, message: '楽曲ファイルをアップロードしてください' }] }]"
+              name="upload"
+              :before-upload="beforeUpload"
+              :file-list="versionFile"
+            >
+              <a-button> <a-icon type="upload" /> Click to Upload </a-button>
+            </a-upload>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit"> 登録 </a-button>
+          </a-form-item>
+        </a-form>
       </a-collapse-panel>
     </a-collapse>
 
@@ -66,21 +74,21 @@ export default {
     await this.fetchMusic({ id: this.$route.params.id });
     
     _.forEach(this.getMusic.versions, (music) => {
-
+      // 再生位置を０に設定
       this.$set(this.percent, music.id, 0);
+      // 再生時間を０に設定
       this.$set(this.currentTime, music.id, 0);
 
       const audio = document.getElementById("music" + music.id);
 
+      // オーディオが再生可能になったら総再生時間を設定
       audio.addEventListener("canplay", () => {
         this.$set(this.duration, music.id, Math.floor(audio.duration));
       });
+      // オーディオが更新されたら再生位置と再生時間をセット
       audio.addEventListener("timeupdate", () => {
         this.$set(this.currentTime, music.id, Math.floor(audio.currentTime));
-        this.$set(
-          this.percent,
-          music.id,
-          Math.floor((audio.currentTime / audio.duration) * 100)
+        this.$set(this.percent, music.id, Math.floor((audio.currentTime / audio.duration) * 100)
         );
       });
     });
@@ -113,24 +121,31 @@ export default {
       // TODO: バイナリデータを格納するデータベースのURLを返す,s3の予定
       return "http://localhost:8080" + srcUrl;
     },
+    versionHandleSubmit() {
+      event.preventDefault();
+      this.discForm.validateFields((err, values) => console.log(values))
+    },
+    beforeUpload(file) {
+      this.versionFile = []
+      const isAudio = file.type === 'audio/wav' || file.type === 'audio/mpeg';
+      if (!isAudio) {
+        this.$message.error('拡張子がWAVかmp3のファイルを選択してください');
+      } else {
+        this.versionFile.push(file)
+      }
+    }
   },
   data() {
     return {
       percent: {},
       currentTime: {},
       duration: {},
+      versionForm: this.$form.createForm(this, {name: "version_form"}),
+      versionFile:[]
     };
   },
   computed: {
     ...mapGetters("music", ["getMusic"]),
-  },
-  watch: {
-    $refs: {
-      handler: function () {
-        console.log("hit");
-      },
-      deep: true,
-    },
   },
 };
 </script>
