@@ -6,7 +6,7 @@
 
     <a-button size="small">楽曲を編集</a-button>
     <a-button size="small">楽曲を削除</a-button>
-
+    
     <a-collapse>
       <a-collapse-panel key="1" header="楽曲のバージョンを登録">
         <a-form　:form="versionForm" @submit="versionHandleSubmit">
@@ -123,17 +123,17 @@ export default {
     },
     versionHandleSubmit() {
       event.preventDefault();
-      this.discForm.validateFields((err, values) => console.log(values))
+      this.versionForm.validateFields((err, values) => console.log(values))
     },
     beforeUpload(file) {
       this.versionFile = []
       const isAudio = file.type === 'audio/wav' || file.type === 'audio/mpeg';
       if (!isAudio) {
         this.$message.error('拡張子がWAVかmp3のファイルを選択してください');
-      } else {
-        this.versionFile.push(file)
-      }
-    }
+        return
+      } 
+      this.versionFile.push(file)
+    },
   },
   data() {
     return {

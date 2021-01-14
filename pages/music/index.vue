@@ -20,6 +20,10 @@
 
     <div class="discContent" v-for="disc in getDiscList" :key="disc.id">
       <h3 class="discContent__title">{{ disc.title }}</h3>
+      <p>{{ disc.description }}</p>
+
+      <a-button size="small">ディスクを編集</a-button>
+      <a-button size="small" @click.prevent="deleteDiscId(disc.id)">ディスクを削除</a-button>
 
       <div>
         <a-collapse>
@@ -54,9 +58,6 @@
           </a-list-item-meta>
         </a-list-item>
       </a-list>
-
-      <a-button size="small">ディスクを編集</a-button>
-      <a-button size="small">ディスクを削除</a-button>
     </div>
   </div>
 </template>
@@ -79,15 +80,27 @@ export default {
     ...mapGetters("music", ["getDiscList", "getIsLoading"]),
   },
   methods: {
-    ...mapActions("music", ["fetchDiscList"]),
+    ...mapActions("music", ["fetchDiscList", "postDisc", "postMusic", "deleteDisc", "deleteMusic"]),
     discHandleSubmit() {
       event.preventDefault();
-      this.discForm.validateFields((err, values) => console.log(values))
+      this.discForm.validateFields( (err, values) => {
+        this.postDisc(values)
+          .then(() => this.$router.push('/music'))
+      })
     },
     musicHandleSubmit(id, e) {
       event.preventDefault();
       console.log("discID: " + id)
-      this.musicForm.validateFields((err, values) => console.log(values))
+      this.musicForm.validateFields((err, values) => {
+        this.postDisc(values)
+          .then(() => this.$router.push('/music'))
+      })
+    },
+    deleteDiscId(id) {
+      if(window.confirm("ディスクを本当に削除しますか？")) {
+        this.deleteDisc(id)
+        return
+      }
     }
   },
 };

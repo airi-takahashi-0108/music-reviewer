@@ -48,6 +48,22 @@ export const actions = {
     commit('setMusic', data)    
     commit('setIsLoading', false)
   },
+  
+  async postDisc({ commit }, data) {
+    await this.$axios.post('/discs', {...data})
+  },
+
+  async postMusic({ commit }, data) {
+    await this.$axios.post('/musics', data)
+  },
+
+  async deleteDisc({ commit }, id) {
+    await this.$axios.delete('/discs/' + id)
+  },
+
+  async deleteMusic({ commit }, id) {
+    await this.$axios.delete('/musics/' + id)
+  },
 
   async searchVersions({ commit}, id) {
     const {data} = await this.$axios.get('/versions', { params: {music_id: id} })
