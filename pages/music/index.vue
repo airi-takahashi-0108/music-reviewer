@@ -88,11 +88,10 @@ export default {
           .then(() => this.$router.push('/music'))
       })
     },
-    musicHandleSubmit(id, e) {
+    musicHandleSubmit(id) {
       event.preventDefault();
-      console.log("discID: " + id)
       this.musicForm.validateFields((err, values) => {
-        this.postDisc(values)
+        this.postMusic({data: values, id: id})
           .then(() => this.$router.push('/music'))
       })
     },

@@ -53,8 +53,8 @@ export const actions = {
     await this.$axios.post('/discs', {...data})
   },
 
-  async postMusic({ commit }, data) {
-    await this.$axios.post('/musics', data)
+  async postMusic({ commit }, {data, id}) {
+    await this.$axios.post('/musics', {...data, disc_id: id})
   },
 
   async deleteDisc({ commit }, id) {
