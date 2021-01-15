@@ -9,15 +9,16 @@
     
     <a-collapse>
       <a-collapse-panel key="1" header="楽曲のバージョンを登録">
-        <a-form　:form="versionForm" @submit="versionHandleSubmit">
+        <a-form　:form="versionForm" @submit="versionHandleSubmit(getMusic.id)">
           <a-form-item label="バージョン">
             <a-input v-decorator="['version', { rules: [{ required: true, message: 'バージョン情報を入力してください' }] }]"/>
           </a-form-item>
           <a-form-item label="楽曲データ">
-            <a-upload v-decorator="['upload', { rules: [{ required: true, message: '楽曲ファイルをアップロードしてください' }] }]"
+            <a-upload v-decorator="['audio', { rules: [{ required: true, message: '楽曲ファイルをアップロードしてください' }] }]"
               name="upload"
               :before-upload="beforeUpload"
               :file-list="versionFile"
+              accept="audio/wav, audio/mpeg"
             >
               <a-button> <a-icon type="upload" /> Click to Upload </a-button>
             </a-upload>
@@ -33,6 +34,8 @@
       <div class="musicContents">
         <h4>バージョン:{{ music.version }}</h4>
         <p>{{ music.created_at }}作成</p>
+                <pre>{{music.audio}}</pre>
+
 
         <audio
           :src="setMusicSrc(music.src)"
@@ -94,7 +97,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions("music", ["fetchMusic"]),
+    ...mapActions("music", ["fetchMusic", "postVersion"]),
     changePosition(id, e) {
       const audio = document.getElementById("music" + id);
 
@@ -121,9 +124,12 @@ export default {
       // TODO: バイナリデータを格納するデータベースのURLを返す,s3の予定
       return "http://localhost:8080" + srcUrl;
     },
-    versionHandleSubmit() {
+    versionHandleSubmit(id) {
       event.preventDefault();
-      this.versionForm.validateFields((err, values) => console.log(values))
+      this.versionForm.validateFields((err, values) => {
+        values.audio = values.audio.fileList[0]
+        this.postVersion({data: values, id: id})
+      })
     },
     beforeUpload(file) {
       this.versionFile = []
