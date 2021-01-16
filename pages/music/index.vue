@@ -1,6 +1,13 @@
 <template>
   <div class="container">
     <h2>楽曲一覧</h2>
+    <div v-if="!getDiscList.length" class="explanation">
+      まずは、制作したいCD=ディスクの情報を登録してみよう！<br>
+      <br>
+      例）<br>
+      ディスクタイトル：1st Album<br>
+      詳細：来年発売予定のアルバムです。キャッチーなメロディーに、ロックなギターをのせ、かっこいい作品に仕上げたいです。
+    </div>
 
     <a-collapse class="registrationForm discRegistrationForm">
       <a-collapse-panel key="1" header="ディスクを登録">

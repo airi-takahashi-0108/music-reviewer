@@ -45,3 +45,8 @@ h3 {
 .registrationForm__button {
   margin-top: 17px;
 }
+
+.explanation {
+  background: rgb(255, 236, 211);
+  padding: 20px;
+}
