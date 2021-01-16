@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <h2 class="page-title">楽曲詳細</h2>
+    <h2>楽曲詳細</h2>
     <h3>{{ getMusic.title }}</h3>
     <p>{{ getMusic.comment }}</p>
 
-    <button size="small" @click="toggleUpdateForm">楽曲を編集</button>
-    <button size="small" @click="deleteMusicId(getMusic.id)">楽曲を削除</button>
+    <button size="small" @click="toggleUpdateForm" class="editButton">楽曲を編集</button>
+    <button size="small" @click="deleteMusicId(getMusic.id)" class="deleteButton">楽曲を削除</button>
     
     <div class="updateForm" v-show="dispMusicUpdateForm">
       <a-form :form="musicUpdateForm" @submit="musicUpdateHandleSubmit(getMusic.id)">
@@ -16,12 +16,12 @@
           <a-input type="textarea" v-decorator="['comment', { initialValue: getMusic.comment, rules: [{ required: true, message: 'コメントを入力してください' }] }]"/>
         </a-form-item>
           <a-form-item>
-            <a-button type="primary" html-type="submit"> 登録 </a-button>
+            <a-button type="primary" html-type="submit" class="updateForm__button"> 更新 </a-button>
           </a-form-item>
       </a-form>  
     </div>
 
-    <a-collapse>
+    <a-collapse class="registrationForm discRegistrationForm">
       <a-collapse-panel key="1" header="楽曲のバージョンを登録">
         <a-form　:form="versionForm" @submit="versionHandleSubmit(getMusic.id)">
           <a-form-item label="バージョン">
@@ -39,20 +39,17 @@
             </a-upload>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" html-type="submit"> 登録 </a-button>
+            <a-button type="primary" html-type="submit" class="registrationForm__button"> 登録 </a-button>
           </a-form-item>
         </a-form>
       </a-collapse-panel>
     </a-collapse>
 
-    <input type="file" id="file" @change="test" /> <button type="button" id="button">バイナリ表示</button>
-
     <div v-for="music in getMusic.versions" :key="music.id">
       <div class="musicContents">
         <h4>バージョン:{{ music.version }}</h4>
         <p>{{ music.created_at }}作成</p>
-                <pre>{{music}}</pre>
-
+        <pre>{{music}}</pre>
 
         <audio
           :src="setMusicSrc(music.src)"
@@ -112,6 +109,17 @@ export default {
         );
       });
     });
+  },
+  data() {
+    return {
+      percent: {},
+      currentTime: {},
+      duration: {},
+      versionForm: this.$form.createForm(this, {name: "version_form"}),
+      musicUpdateForm: this.$form.createForm(this, {name: "music_update_form"}),
+      versionFile:[],
+      dispMusicUpdateForm: false
+    };
   },
   methods: {
     ...mapActions("music", ["fetchMusic", "postVersion", "deleteMusic", "updateMusic"]),
@@ -180,24 +188,13 @@ export default {
       this.dispMusicUpdateForm = !this.dispMusicUpdateForm
     }
   },
-  data() {
-    return {
-      percent: {},
-      currentTime: {},
-      duration: {},
-      versionForm: this.$form.createForm(this, {name: "version_form"}),
-      musicUpdateForm: this.$form.createForm(this, {name: "music_update_form"}),
-      versionFile:[],
-      dispMusicUpdateForm: false
-    };
-  },
   computed: {
     ...mapGetters("music", ["getMusic"]),
   },
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .seekbar {
   width: 100%;
   height: 32px;
@@ -211,9 +208,11 @@ export default {
   border-bottom: 1px solid rgb(170, 170, 170);
 }
 
-.updateForm {
-  padding: 20px;
-  background-color: rgb(245, 245, 245);
-  border: 1px solid rgb(209, 209, 209);
+.discRegistrationForm {
+  margin: 15px 0;
 }
+
+
+
+
 </style>

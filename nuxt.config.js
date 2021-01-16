@@ -18,7 +18,8 @@ export default {
 
   css: [
     'ant-design-vue/dist/antd.css',
-    '~assets/styles/common.css'
+    '~assets/styles/common.css',
+    '~assets/styles/customAntStyle.css'
   ],
 
   plugins: [
@@ -28,9 +29,8 @@ export default {
 
   components: true,
 
-  buildModules: [
-  ],
-
+  buildModules: ['@nuxtjs/tailwindcss'],
+  
   modules: [
     "@nuxtjs/axios"
   ],
@@ -41,20 +41,6 @@ export default {
 
   build: {
     extend(config, ctx) {
-    },
-    postcss: {
-      preset: {
-        features: {
-          'nesting-rules': true
-        }
-      },
-      plugins: [
-        require('postcss-preset-env')({
-          features: {
-            'nesting-rules': true,
-          }
-        }),
-      ]
     },
   },
   server: {

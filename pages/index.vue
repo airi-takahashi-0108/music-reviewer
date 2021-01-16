@@ -1,6 +1,46 @@
 <template>
   <div class="container">
-  {{getDiscList}}
+      <h2>MUSIC REVIEWER</h2>
+      <h3>概要</h3>
+      <p>私、高橋愛理のポートフォリオとして作成した、楽曲レビューアプリです。</p>
+      <p>少しマニアックなアプリになりますが…</p>
+      <p>作曲家が、ギタリストなどの奏者と一緒に楽曲制作をするにあたり、「この曲のここはもっとこうしたい！」などのやりとりが頻繁に発生しますが、このアプリを使うと、楽曲ファイルごとにweb上でコメントしあうことができます。</p>
+
+      <h3>使い方</h3>
+      <ol>
+        <li>ディスクを登録する</li>
+        <p>まず、作リたいCD=ディスクの情報を入力します。 <br>
+         <br>
+          例）<br>
+          タイトル：1st Album<br>
+          概要：来年発売予定のアルバムです。キャッチーなメロディーに、ロックなギターをのせ、かっこいい作品に仕上げたいです。<br>
+        </p>
+        <li>楽曲を登録する</li>
+        <p>登録したディスクに、楽曲情報を入力します。<br>
+         <br>
+          例）<br>
+          タイトル：sky above<br>
+          コメント：ロックバラードです。Aメロは柔らかく、サビはどっしりしたギターを希望します。<br>
+        </p>
+        <li>バージョンを登録する</li>
+        <p>制作では、１つの楽曲で数回のデータのやりとりが発生します。「ギター入れたver」「歌入れてみたver」など、楽曲ファイルと共にバージョン情報を登録します。<br>
+         <br>
+          例）<br>
+          バージョン：ギターを入れてみた<br>
+          コメント：いただいたデモ音源に、ギターを入れてみました。<br>
+          データ：20210115guitar.mp3<br>
+        </p>
+        <li>コメントし合う</li>
+        <p>アップロードした楽曲データ（バージョン）に対して、ユーザー同士でコメントしあいます。<br>
+         <br>
+          例）<br>
+          コメント（ユーザーA）：かっこいい！Aメロもっと柔らかい感じにできる？<br>
+          コメント（ユーザーB）：やってみますねー！もっと音数減らしますか？<br>
+          コメント（ユーザーA）：そうね、そのほうがいいかも<br>
+        </p>
+      </ol>
+
+  
   </div>
 </template>
 
@@ -12,50 +52,21 @@ export default {
     return {
     }
   },
-  async fetch() {
-    await this.fetchDiscList()
-  },
-  computed: {
-    ...mapGetters("music", ["getDiscList", "getIsLoading"]),
-  },
-  methods: {
-    ...mapActions("music", ["fetchDiscList"]),
-  }
-  
 }
 </script>
 
-<style lang="postcss">
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
+<style scoped>
+ol {
+  padding-left: 25px;
 }
 
-.logo {
-  font-size: 20px;
+li {
+  list-style: decimal;
   font-weight: bold;
-  color: #fff;
-  display: block; 
-  padding: 20px 0;
+  font-size: 1.2rem;
 }
 
-.header {
-  color: #fff;
-  &__userImage {
-    margin-right: 10px;
-  }
-  &__userName {
-    font-weight: bold;
-  }
-}
-
-.a {
-  background: aquamarine;
-  &__b {
-    background: red;
-    font-size: 3px;
-  }
+p {
+  font-size: 1rem;
 }
 </style>

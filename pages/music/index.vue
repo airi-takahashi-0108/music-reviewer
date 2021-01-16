@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h2 class="page-title">楽曲一覧</h2>
+    <h2>楽曲一覧</h2>
 
-    <a-collapse>
+    <a-collapse class="registrationForm discRegistrationForm">
       <a-collapse-panel key="1" header="ディスクを登録">
         <a-form :form="discForm" @submit="discHandleSubmit">
           <a-form-item label="ディスクタイトル">
@@ -12,7 +12,7 @@
             <a-input type="textarea" v-decorator="['description', { rules: [{ required: true, message: 'ディスクの詳細を入力してください' }] }]"/>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" html-type="submit"> 登録 </a-button>
+            <a-button type="primary" html-type="submit" class="registrationForm__button"> 登録 </a-button>
           </a-form-item>
         </a-form>
       </a-collapse-panel>
@@ -22,8 +22,8 @@
       <h3 class="discContent__title">{{ disc.title }}</h3>
       <p>{{ disc.description }}</p>
 
-      <button size="small" @click.prevent="toggleUpdateForm(disc.id)">ディスクを編集</button>
-      <button size="small" @click.prevent="deleteDiscId(disc.id)">ディスクを削除</button>
+      <button size="small" @click.prevent="toggleUpdateForm(disc.id)" class="editButton">ディスクを編集</button>
+      <button size="small" @click.prevent="deleteDiscId(disc.id)" class="deleteButton">ディスクを削除</button>
 
       <div class="updateForm" v-show="currentUpdateForm === disc.id">
         <a-form :form="discUpdateForm" @submit="discUpdateHandleSubmit(disc.id)">
@@ -36,13 +36,13 @@
             />
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" html-type="submit"> 更新 </a-button>
+            <a-button type="primary" html-type="submit" class="updateForm__button"> 更新 </a-button>
           </a-form-item>
         </a-form>
       </div>
 
       <div>
-        <a-collapse>
+        <a-collapse class="registrationForm musicRegistrationForm">
           <a-collapse-panel key="1" header="楽曲を登録">
             <a-form :form="musicForm" @submit="musicHandleSubmit(disc.id)">
               <a-form-item label="楽曲タイトル">
@@ -52,7 +52,7 @@
                 <a-input type="textarea" v-decorator="['comment', { rules: [{ required: true, message: 'コメントを入力してください' }] }]"/>
               </a-form-item>
                 <a-form-item>
-                  <a-button type="primary" html-type="submit"> 登録 </a-button>
+                  <a-button type="primary" html-type="submit" class="registrationForm__button"> 登録 </a-button>
                 </a-form-item>
             </a-form>
           </a-collapse-panel>
@@ -138,7 +138,7 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .discContent {
   padding: 20px;
   border: 2px solid rgb(211, 211, 211);
@@ -147,15 +147,17 @@ export default {
     font-size: 1.5rem;
   }
 }
+
 .musicForm {
   padding: 20px;
-  background-color: rgb(245, 245, 245);
 }
 
-.updateForm {
-  padding: 20px;
-  background-color: rgb(245, 245, 245);
-  border: 1px solid rgb(209, 209, 209);
+.discRegistrationForm {
+  margin-bottom: 15px;
+}
+
+.musicRegistrationForm {
+  margin-top: 15px;
 }
 
 /deep/ .ant-list-item-meta-title {

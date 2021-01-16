@@ -1,21 +1,47 @@
-html {
+body {
   font-size: 15px;
+  font-family: sans-serif;
 }
 
-body {
- 
+h2 {
+ font-weight: bold;
+ font-size: 2rem
 }
+
+h3 {
+ font-weight: bold;
+ font-size: 1.3rem
+}
+
 
 .container {
   padding: 20px;
   display: block;
 }
 
-.page-title {
-  font-weight: bold;
-  font-size: 1.5rem
+.editButton {
+  background-color: rgb(88, 155, 255);
+  padding: 4px 6px;
+  border-radius: 3px;
+  color: #fff;
 }
 
-.hidden {
-  display: none;
+.deleteButton {
+  background-color: rgb(255, 111, 111);
+  padding: 4px 6px;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.updateForm {
+ padding: 20px;
+ background-color: rgb(245, 245, 245);
+ border: 1px solid rgb(209, 209, 209);
+}
+.updateForm__button {
+  margin-top: 17px;
+}
+
+.registrationForm__button {
+  margin-top: 17px;
 }
