@@ -4,9 +4,23 @@
     <h3>{{ getMusic.title }}</h3>
     <p>{{ getMusic.comment }}</p>
 
-    <a-button size="small">楽曲を編集</a-button>
-    <a-button size="small">楽曲を削除</a-button>
+    <button size="small" @click="toggleUpdateForm">楽曲を編集</button>
+    <button size="small" @click="deleteMusicId(getMusic.id)">楽曲を削除</button>
     
+    <div class="updateForm" v-show="dispMusicUpdateForm">
+      <a-form :form="musicUpdateForm" @submit="musicUpdateHandleSubmit(getMusic.id)">
+        <a-form-item label="楽曲タイトル">
+          <a-input v-decorator="['title', { initialValue: getMusic.title, rules: [{ required: true, message: '楽曲タイトルを入力してください' }] }]"/>
+        </a-form-item>
+        <a-form-item label="コメント">
+          <a-input type="textarea" v-decorator="['comment', { initialValue: getMusic.comment, rules: [{ required: true, message: 'コメントを入力してください' }] }]"/>
+        </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit"> 登録 </a-button>
+          </a-form-item>
+      </a-form>  
+    </div>
+
     <a-collapse>
       <a-collapse-panel key="1" header="楽曲のバージョンを登録">
         <a-form　:form="versionForm" @submit="versionHandleSubmit(getMusic.id)">
@@ -19,6 +33,7 @@
               :before-upload="beforeUpload"
               :file-list="versionFile"
               accept="audio/wav, audio/mpeg"
+              :multiple="false"
             >
               <a-button> <a-icon type="upload" /> Click to Upload </a-button>
             </a-upload>
@@ -30,11 +45,13 @@
       </a-collapse-panel>
     </a-collapse>
 
+    <input type="file" id="file" @change="test" /> <button type="button" id="button">バイナリ表示</button>
+
     <div v-for="music in getMusic.versions" :key="music.id">
       <div class="musicContents">
         <h4>バージョン:{{ music.version }}</h4>
         <p>{{ music.created_at }}作成</p>
-                <pre>{{music.audio}}</pre>
+                <pre>{{music}}</pre>
 
 
         <audio
@@ -97,7 +114,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions("music", ["fetchMusic", "postVersion"]),
+    ...mapActions("music", ["fetchMusic", "postVersion", "deleteMusic", "updateMusic"]),
     changePosition(id, e) {
       const audio = document.getElementById("music" + id);
 
@@ -120,6 +137,11 @@ export default {
     stop: function (id) {
       document.getElementById(id).pause();
     },
+    test(e){
+      event.preventDefault();
+      console.log(e.target.files)
+
+    },
     setMusicSrc(srcUrl) {
       // TODO: バイナリデータを格納するデータベースのURLを返す,s3の予定
       return "http://localhost:8080" + srcUrl;
@@ -128,8 +150,17 @@ export default {
       event.preventDefault();
       this.versionForm.validateFields((err, values) => {
         values.audio = values.audio.fileList[0]
+        var md5 = require('md5');
+        console.log(md5(values.audio));
         this.postVersion({data: values, id: id})
       })
+    },
+    musicUpdateHandleSubmit(id) {
+      event.preventDefault();
+      this.musicUpdateForm.validateFields( (err, values) => {
+        this.updateMusic({data: values, id: id})
+        this.$router.push('/music')
+      })  
     },
     beforeUpload(file) {
       this.versionFile = []
@@ -140,6 +171,14 @@ export default {
       } 
       this.versionFile.push(file)
     },
+    deleteMusicId(id) {
+      if(window.confirm("楽曲を本当に削除しますか？")) {
+        this.deleteMusic(id)
+      }
+    },
+    toggleUpdateForm() {
+      this.dispMusicUpdateForm = !this.dispMusicUpdateForm
+    }
   },
   data() {
     return {
@@ -147,7 +186,9 @@ export default {
       currentTime: {},
       duration: {},
       versionForm: this.$form.createForm(this, {name: "version_form"}),
-      versionFile:[]
+      musicUpdateForm: this.$form.createForm(this, {name: "music_update_form"}),
+      versionFile:[],
+      dispMusicUpdateForm: false
     };
   },
   computed: {
@@ -168,5 +209,11 @@ export default {
 .musicContents {
   padding: 20px;
   border-bottom: 1px solid rgb(170, 170, 170);
+}
+
+.updateForm {
+  padding: 20px;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid rgb(209, 209, 209);
 }
 </style>

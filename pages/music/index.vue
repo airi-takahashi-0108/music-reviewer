@@ -22,8 +22,24 @@
       <h3 class="discContent__title">{{ disc.title }}</h3>
       <p>{{ disc.description }}</p>
 
-      <a-button size="small">ディスクを編集</a-button>
-      <a-button size="small" @click.prevent="deleteDiscId(disc.id)">ディスクを削除</a-button>
+      <button size="small" @click.prevent="toggleUpdateForm(disc.id)">ディスクを編集</button>
+      <button size="small" @click.prevent="deleteDiscId(disc.id)">ディスクを削除</button>
+
+      <div class="updateForm" v-show="currentUpdateForm === disc.id">
+        <a-form :form="discUpdateForm" @submit="discUpdateHandleSubmit(disc.id)">
+          <a-form-item label="ディスクタイトル">
+            <a-input v-decorator="['title', { initialValue: disc.title, rules: [{ required: true, message: 'ディスクタイトルを入力してください' }],}]"
+            />
+          </a-form-item>
+          <a-form-item label="詳細">
+            <a-input type="textarea" v-decorator="['description', { initialValue: disc.description, rules: [{ required: true, message: 'ディスクの詳細を入力してください' }] }]"
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" html-type="submit"> 更新 </a-button>
+          </a-form-item>
+        </a-form>
+      </div>
 
       <div>
         <a-collapse>
@@ -71,6 +87,8 @@ export default {
       loading: false,
       discForm: this.$form.createForm(this, {name: "disc_form"}),
       musicForm: this.$form.createForm(this, {name: "music_form"}),
+      discUpdateForm: this.$form.createForm(this, {name: "disc_update_form"}),
+      currentUpdateForm: ""
     };
   },
   async fetch() {
@@ -80,25 +98,40 @@ export default {
     ...mapGetters("music", ["getDiscList", "getIsLoading"]),
   },
   methods: {
-    ...mapActions("music", ["fetchDiscList", "postDisc", "postMusic", "deleteDisc", "deleteMusic"]),
+    ...mapActions("music", ["fetchDiscList", "postDisc", "postMusic", "deleteDisc", "deleteMusic", "updateDisc"]),
     discHandleSubmit() {
       event.preventDefault();
       this.discForm.validateFields( (err, values) => {
         this.postDisc(values)
-          .then(() => this.$router.push('/music'))
+        this.$router.push('/music')
       })
     },
     musicHandleSubmit(id) {
       event.preventDefault();
       this.musicForm.validateFields((err, values) => {
         this.postMusic({data: values, id: id})
-          .then(() => this.$router.push('/music'))
+        this.$router.push('/music')
+      })
+    },
+    discUpdateHandleSubmit(id) {
+      event.preventDefault();
+      this.discUpdateForm.validateFields( (err, values) => {
+        this.updateDisc({data: values, id: id})
+        this.$router.push('/music')
       })
     },
     deleteDiscId(id) {
       if(window.confirm("ディスクを本当に削除しますか？")) {
         this.deleteDisc(id)
-        return
+        this.$router.push('/music')
+      }
+    },
+    toggleUpdateForm(id) {
+      // TODO: もっと良い方法がないか検討
+      if (this.currentUpdateForm === id) {
+        this.currentUpdateForm = ""
+      } else {
+        this.currentUpdateForm = id
       }
     }
   },
@@ -114,10 +147,15 @@ export default {
     font-size: 1.5rem;
   }
 }
-
 .musicForm {
   padding: 20px;
   background-color: rgb(245, 245, 245);
+}
+
+.updateForm {
+  padding: 20px;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid rgb(209, 209, 209);
 }
 
 /deep/ .ant-list-item-meta-title {

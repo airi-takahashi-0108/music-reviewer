@@ -70,6 +70,15 @@ export const actions = {
     await this.$axios.delete('/musics/' + id)
   },
 
+  async updateDisc({ commit }, {data, id}) {
+    await this.$axios.put('/discs/' + id, {...data})
+  },
+
+  async updateMusic({ commit }, {data, id}) {
+    console.log(data, id)
+    await this.$axios.put('/musics/' + id, {...data})
+  },
+
   async searchVersions({ commit}, id) {
     const {data} = await this.$axios.get('/versions', { params: {music_id: id} })
     return data
