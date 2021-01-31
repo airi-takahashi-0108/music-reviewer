@@ -90,4 +90,6 @@ sw.*
 # Vim swap files
 *.swp
 
+api/vendor/
+api/tmp/cache/
 package-lock.json
