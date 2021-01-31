@@ -43,7 +43,7 @@ export const actions = {
     const {data} = await this.$axios.get('/musics/' + id)
   
     const versions = await dispatch('searchVersions', data.id )
-    data.versions = versions
+    data.versions = _.orderBy(versions, 'created_at', 'desc')
  
     commit('setMusic', data)    
     commit('setIsLoading', false)
@@ -58,12 +58,12 @@ export const actions = {
   },
 
   async postVersion({ commit }, {data, id}) {
-    console.log(data)
     await this.$axios.post('/versions', {...data, music_id: id})
   },
 
   async deleteDisc({ commit }, id) {
     await this.$axios.delete('/discs/' + id)
+
   },
 
   async deleteMusic({ commit }, id) {
@@ -75,7 +75,6 @@ export const actions = {
   },
 
   async updateMusic({ commit }, {data, id}) {
-    console.log(data, id)
     await this.$axios.put('/musics/' + id, {...data})
   },
 

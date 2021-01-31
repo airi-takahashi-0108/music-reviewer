@@ -29,4 +29,22 @@ export const actions = {
     commit('setIsLoading', true)
     commit('setIsLoading', false)
   },
+  async login({commit}, query) {
+    commit('setIsLoading', true)
+      await this.$axios.post('/login', {...query})
+    commit('setIsLoading', false)
+  },
+  async logout({commit}, query) {
+    commit('setIsLoading', true)
+      await this.$axios.delete('/logout', {...query})
+    commit('setIsLoading', false)
+  },
+  async createUser({commit}, query) {
+    commit('setIsLoading', true)
+    commit('setIsLoading', false)
+  },
+  async deleteUser({commit}, query) {
+    commit('setIsLoading', true)
+    commit('setIsLoading', false)
+  },
 }

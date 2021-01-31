@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <h2>楽曲一覧</h2>
+    
     <div v-if="!getDiscList.length" class="explanation">
       まずは、制作したいCD=ディスクの情報を登録してみよう！<br>
       <br>
@@ -25,12 +26,21 @@
       </a-collapse-panel>
     </a-collapse>
 
+
     <div class="discContent" v-for="disc in getDiscList" :key="disc.id">
       <h3 class="discContent__title">{{ disc.title }}</h3>
       <p>{{ disc.description }}</p>
 
-      <button size="small" @click.prevent="toggleUpdateForm(disc.id)" class="editButton">ディスクを編集</button>
-      <button size="small" @click.prevent="deleteDiscId(disc.id)" class="deleteButton">ディスクを削除</button>
+      <div v-if="!disc.musics.length" class="explanation">
+        ディスクが登録できたら、楽曲を登録してみよう！<br>
+        <br>
+        例）<br>
+        楽曲タイトル：sky above<br>
+        コメント：ロックバラードです。Aメロは柔らかく、サビはどっしりしたギターを希望します。<br>
+      </div>
+
+      <button @click.prevent="toggleUpdateForm(disc.id)" class="editButton">ディスクを編集</button>
+      <button @click.prevent="deleteDiscId(disc.id)" class="deleteButton">ディスクを削除</button>
 
       <div class="updateForm" v-show="currentUpdateForm === disc.id">
         <a-form :form="discUpdateForm" @submit="discUpdateHandleSubmit(disc.id)">
@@ -91,11 +101,10 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      loading: false,
       discForm: this.$form.createForm(this, {name: "disc_form"}),
       musicForm: this.$form.createForm(this, {name: "music_form"}),
       discUpdateForm: this.$form.createForm(this, {name: "disc_update_form"}),
-      currentUpdateForm: ""
+      currentUpdateForm: "",
     };
   },
   async fetch() {
@@ -107,30 +116,30 @@ export default {
   methods: {
     ...mapActions("music", ["fetchDiscList", "postDisc", "postMusic", "deleteDisc", "deleteMusic", "updateDisc"]),
     discHandleSubmit() {
-      event.preventDefault();
       this.discForm.validateFields( (err, values) => {
         this.postDisc(values)
+      }).then(()=> {
         this.$router.push('/music')
       })
     },
     musicHandleSubmit(id) {
-      event.preventDefault();
       this.musicForm.validateFields((err, values) => {
         this.postMusic({data: values, id: id})
+      }).then(()=> {
         this.$router.push('/music')
       })
     },
     discUpdateHandleSubmit(id) {
-      event.preventDefault();
       this.discUpdateForm.validateFields( (err, values) => {
         this.updateDisc({data: values, id: id})
+      }).then(()=> {
         this.$router.push('/music')
       })
     },
-    deleteDiscId(id) {
+    async deleteDiscId(id) {
       if(window.confirm("ディスクを本当に削除しますか？")) {
-        this.deleteDisc(id)
-        this.$router.push('/music')
+        await this.deleteDisc(id)
+        this.$router.push('/music')        
       }
     },
     toggleUpdateForm(id) {

@@ -1,20 +1,26 @@
 # music-reviewer
 
-## Build Setup
+私、高橋愛理のポートフォリオとして作成した、楽曲レビューアプリです。
 
+少しマニアックなアプリになりますが…
+
+作曲家が、ギタリストなどの奏者と一緒に楽曲制作をするにあたり、「この曲のここはもっとこうしたい！」などのやりとりが頻繁に発生しますが、このアプリを使うと、楽曲ファイルごとにweb上でコメントしあうことができます。
+
+※使用方法はトップページにてご確認ください。
+
+## apiサーバーの立ち上げ
 ```bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn dev
-
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
+$ cd api
+$ bundle install
+$ rails s
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+## フロントの立ち上げ
+```bash
+$ yarn 
+$ yarn dev
+```
+
+なお、現在まだまだ途中の段階ですので、楽曲情報などの基本的な登録更新削除のみ機能しています。
+（削除時の画面のリロードがうまくいっていなかったり、ローディングアニメーションやエラーハンドリングはまだ実装しておりません…）
+ユーザー認証は未実装です。

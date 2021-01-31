@@ -29,7 +29,7 @@ export default {
 
   components: true,
 
-  buildModules: ['@nuxtjs/tailwindcss'],
+  buildModules: [],
   
   modules: [
     "@nuxtjs/axios"
@@ -45,7 +45,7 @@ export default {
   },
   server: {
     port: 8080, 
-    host: '0.0.0.0'
+    host: 'localhost'
   },
   env: {
     ENV,
