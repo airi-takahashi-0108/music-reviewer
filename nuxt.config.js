@@ -1,5 +1,5 @@
-require("dotenv").config()
-const {ENV, END_POINT, BASE_URL} = process.env
+// require("dotenv").config()
+// const {ENV, END_POINT, BASE_URL} = process.env
 
 export default {
   ssr: false,
@@ -36,7 +36,7 @@ export default {
   ],
 
   axios: {
-    baseURL: process.env.BASE_URL
+    baseURL: 'http://localhost:3000'
   },
 
   build: {
@@ -47,9 +47,9 @@ export default {
     port: 8080, 
     host: 'localhost'
   },
-  env: {
-    ENV,
-    END_POINT,
-    BASE_URL
-  }
+  // env: {
+  //   ENV,
+  //   END_POINT,
+  //   BASE_URL
+  // }
 }
